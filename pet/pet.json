@@ -1,0 +1,7 @@
+{
+  "id": "coderun-cat",
+  "displayName": "CodeRun Cat",
+  "description": "The white pixel-art CodeRun study-buddy cat who works, waits, reviews, celebrates, and recovers alongside the user.",
+  "spriteVersionNumber": 2,
+  "spritesheetPath": "spritesheet.webp"
+}

@@ -142,9 +142,20 @@
         </article>
       </section>
 
-      <section class="install-card" id="install" aria-labelledby="install-title">
+      <section class="install-card" id="install-shell" aria-labelledby="install-shell-title">
         <p class="panel-kicker">Bring your study buddy home</p>
-        <h2 id="install-title">Install in Codex</h2>
+        <h2 id="install-shell-title">Install from a terminal</h2>
+        <p>On macOS or Linux, paste this command into your terminal. Requires curl, Python 3.8+, and an existing Codex home directory. Open and set up the desktop app first, then run as your desktop user without sudo.</p>
+        <button class="demo-button" id="copy-shell-install" type="button">Copy install command</button>
+        <span id="copy-shell-install-status" role="status" aria-live="polite"></span>
+        <pre class="install-command" id="install-command" tabindex="0">curl -fL --proto '=https' --proto-redir '=https' https://raw.githubusercontent.com/MeFoDy/coderun-cat-pet/main/install.sh | sh</pre>
+        <p>The installer downloads the current main package, verifies checksums, and backs up any existing CodeRun Cat. After it finishes, open <strong>Settings &gt; Pets</strong>, click <strong>Refresh</strong>, and select <strong>CodeRun Cat</strong>.</p>
+        <p class="install-note">Requires a desktop app supporting custom v2 pets. Windows and WSL are not supported. Uses CODEX_HOME or ~/.codex. <a href="https://github.com/MeFoDy/coderun-cat-pet/blob/main/install.sh">View installer</a> · <a href="https://github.com/MeFoDy/coderun-cat-pet#install">Installation details</a>.</p>
+      </section>
+
+      <section class="install-card" id="install" aria-labelledby="install-title">
+        <p class="panel-kicker">Let your agent handle it</p>
+        <h2 id="install-title">Install with an agent</h2>
         <p>Give this prompt to Codex or another LLM agent with local file access. The agent handles downloading, validation, installation and activation—no manual file copying or terminal commands.</p>
         <button class="demo-button" id="copy-install" type="button">Copy agent prompt</button>
         <span id="copy-install-status" role="status" aria-live="polite"></span>

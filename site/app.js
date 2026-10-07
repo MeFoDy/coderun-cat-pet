@@ -344,18 +344,23 @@ atlas.addEventListener("error", () => {
   petStatus.textContent = "Could not load spritesheet.webp";
 });
 
-document.getElementById("copy-install").addEventListener("click", async () => {
-  const prompt = document.getElementById("install-prompt");
-  const status = document.getElementById("copy-install-status");
-  try {
-    await navigator.clipboard.writeText(prompt.textContent);
-    status.textContent = "Copied — paste into your agent.";
-  } catch {
-    const selection = window.getSelection();
-    const range = document.createRange();
-    range.selectNodeContents(prompt);
-    selection.removeAllRanges();
-    selection.addRange(range);
-    status.textContent = "Select Copy to copy the highlighted prompt.";
-  }
-});
+function setupInstallCopy(buttonId, contentId, statusId, destination, contentName) {
+  document.getElementById(buttonId).addEventListener("click", async () => {
+    const content = document.getElementById(contentId);
+    const status = document.getElementById(statusId);
+    try {
+      await navigator.clipboard.writeText(content.textContent);
+      status.textContent = `Copied — paste into your ${destination}.`;
+    } catch {
+      const selection = window.getSelection();
+      const range = document.createRange();
+      range.selectNodeContents(content);
+      selection.removeAllRanges();
+      selection.addRange(range);
+      status.textContent = `Select Copy to copy the highlighted ${contentName}.`;
+    }
+  });
+}
+
+setupInstallCopy("copy-install", "install-prompt", "copy-install-status", "agent", "prompt");
+setupInstallCopy("copy-shell-install", "install-command", "copy-shell-install-status", "terminal", "command");

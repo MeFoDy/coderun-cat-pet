@@ -474,8 +474,8 @@ select {
   background: var(--page);
 }
 .install-card summary { cursor: pointer; color: var(--ink); }
-.install-card .agent-prompt { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 0.85rem; }
-#copy-install-status { margin-left: 10px; color: var(--green); font-size: 0.85rem; }
+.install-card .agent-prompt, .install-card .install-command { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 0.85rem; }
+#copy-install-status, #copy-shell-install-status { margin-left: 10px; color: var(--green); font-size: 0.85rem; }
 .install-card .install-note { margin-bottom: 0; color: var(--muted); }
 
 footer {

@@ -88,8 +88,7 @@ input[type="range"] {
 
 button:focus-visible,
 select:focus-visible,
-input:focus-visible,
-.install-link:focus-visible {
+input:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
 }
@@ -183,7 +182,6 @@ h1 {
 
 .variant-control {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
@@ -192,19 +190,6 @@ h1 {
   color: var(--muted);
   background: var(--chrome);
   font-size: 0.85rem;
-}
-
-.variant-picker {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.install-link {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  text-decoration: none;
 }
 
 .variant-toggle {
@@ -384,7 +369,6 @@ h1 {
 
 .icon-button:hover,
 .demo-button:hover,
-.install-link:hover,
 .state-button:hover {
   border-color: var(--accent);
 }
@@ -429,8 +413,7 @@ select {
   font-size: 1.75rem;
 }
 
-.demo-button,
-.install-link {
+.demo-button {
   flex: none;
   padding: 10px 13px;
   border: 1px solid var(--control-line);
@@ -690,12 +673,6 @@ noscript {
   footer {
     gap: 12px;
     flex-direction: column;
-  }
-}
-
-@media (max-width: 380px) {
-  .variant-label {
-    display: none;
   }
 }
 

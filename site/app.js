@@ -1,11 +1,9 @@
 const CELL_WIDTH = 192;
 const CELL_HEIGHT = 208;
-const PUBLISHED_PREVIEW = "https://mefody.github.io/coderun-cat-pet/";
 
 const variants = {
   winter: {
     name: "CodeRun Cat — Winter",
-    installName: "CodeRun Cat Winter",
     id: "coderun-cat-winter",
     package: "pet-winter",
     src: "assets/spritesheet-winter.webp?v=7c2b5bcbbfe0",
@@ -152,10 +150,11 @@ const directionArrow = document.querySelector("#direction-arrow");
 const pointerLook = document.querySelector("#pointer-look");
 const variantToggle = document.querySelector("#pet-variant");
 const themeColor = document.querySelector('meta[name="theme-color"]');
-const installInCodex = document.querySelector("#install-in-codex");
 const installCommand = document.querySelector("#install-command");
 const installPrompt = document.querySelector("#install-prompt");
 const installPetName = document.querySelector("#install-pet-name");
+const installPackage = document.querySelector("#install-package");
+const installDirectory = document.querySelector("#install-directory");
 const atlases = {};
 
 let atlas;
@@ -202,15 +201,10 @@ function selectVariant(key) {
       ? `Looking ${directions[directionIndex][0].toLowerCase()}`
       : activeState.status;
 
-  const installSprite = new URL(variant.src, PUBLISHED_PREVIEW);
-  installSprite.searchParams.delete("v");
-  const installParams = new URLSearchParams({
-    name: variant.installName ?? variant.name,
-    imageUrl: installSprite.href,
-    spriteVersionNumber: "2",
-  });
-  installInCodex.href = `codex://pets/install?${installParams}`;
   installPetName.textContent = variant.name;
+  installPackage.href = `https://github.com/MeFoDy/coderun-cat-pet/tree/main/${variant.package}`;
+  installPackage.textContent = `${variant.package}/ package`;
+  installDirectory.textContent = `pets/${variant.id}/`;
   document.querySelector("#copy-shell-install-status").textContent = "";
   document.querySelector("#copy-install-status").textContent = "";
   installCommand.textContent = `curl -fL --proto '=https' --proto-redir '=https' https://raw.githubusercontent.com/MeFoDy/coderun-cat-pet/main/install.sh | sh -s -- --variant ${key}`;

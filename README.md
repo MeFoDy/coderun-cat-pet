@@ -2,7 +2,7 @@
 
 Meet **Кодерун (CodeRun Cat)** — a white pixel-art study buddy for the Codex desktop app. He works under a blanket, waits with a book, takes coffee breaks, and thoughtfully checks the result.
 
-Classic and Winter each include **9 animations and 16 look directions**. The [live preview](https://mefody.github.io/coderun-cat-pet/) opens in Winter against a pixel-art snowy scene. Use **Pet version** to switch between the two sprites and themes and install the selected pet.
+Classic and Winter each include **9 animations and 16 look directions**. The [live preview](https://mefody.github.io/coderun-cat-pet/) opens in Winter against a pixel-art snowy scene. Use **Pet version** to switch sprites and themes and get the installation instructions for the selected pet.
 
 ## Install
 
@@ -15,9 +15,7 @@ Requires a Codex desktop app version that supports custom v2 pets. The browser p
 
 You can install both and switch between them in Codex.
 
-### Install in the desktop app (Windows and macOS)
-
-Open the [live preview](https://mefody.github.io/coderun-cat-pet/), select Winter or Classic, and click **Install in Codex**. Allow the browser to open the desktop app and confirm the installation there. The button uses the [desktop app’s pet installation link](https://learn.chatgpt.com/docs/app/commands#pets). If the install screen does not open, use the [manual steps](#manual-installation).
+On Windows, use the [manual installation steps](#manual-installation) or [install with an agent](#let-your-agent-install-it). On macOS and native Linux, you can also [install from a terminal](#install-from-a-terminal-macos-and-linux).
 
 ### Install from a terminal (macOS and Linux)
 
@@ -59,9 +57,9 @@ If supported app controls are available, refresh the pet list and select [name].
 
 ### Manual installation
 
-Download or clone this repository. Locate the desktop app's `CODEX_HOME`. If unset, use `%USERPROFILE%\.codex` on Windows or `~/.codex` on macOS and Linux. Copy **`pet.json` and `spritesheet.webp`** from the chosen package folder to its destination in the table, keeping them side by side. Back up any existing installation of the chosen version first.
-
-Open **Settings > Pets**, click **Refresh**, and select the matching name from the table. See the [official pet documentation](https://learn.chatgpt.com/docs/pets) for app-specific setup.
+1. Download **`pet.json` and `spritesheet.webp`** from [`pet-winter/`](pet-winter/) for Winter or [`pet/`](pet/) for Classic.
+2. Locate the desktop app's `CODEX_HOME`. If unset, use `%USERPROFILE%\.codex` on Windows or `~/.codex` on macOS and Linux. Back up any existing copy of the chosen pet. Then copy both files into the destination from the table, keeping them side by side.
+3. Open **Settings > Pets**, click **Refresh**, and select the matching name from the table. See the [official pet documentation](https://learn.chatgpt.com/docs/pets) for app-specific setup.
 
 ## Animations
 

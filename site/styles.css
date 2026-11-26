@@ -701,6 +701,12 @@ noscript {
   }
 }
 
+@media (max-width: 380px) {
+  .variant-label {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   :root[data-variant="winter"] .pet-stage::before {
     animation: none;

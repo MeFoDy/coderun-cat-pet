@@ -1,5 +1,6 @@
 const CELL_WIDTH = 192;
 const CELL_HEIGHT = 208;
+const PUBLISHED_PREVIEW = "https://mefody.github.io/coderun-cat-pet/";
 
 const variants = {
   winter: {
@@ -150,6 +151,7 @@ const directionArrow = document.querySelector("#direction-arrow");
 const pointerLook = document.querySelector("#pointer-look");
 const variantToggle = document.querySelector("#pet-variant");
 const themeColor = document.querySelector('meta[name="theme-color"]');
+const installInCodex = document.querySelector("#install-in-codex");
 const installCommand = document.querySelector("#install-command");
 const installPrompt = document.querySelector("#install-prompt");
 const installPetName = document.querySelector("#install-pet-name");
@@ -199,6 +201,12 @@ function selectVariant(key) {
       ? `Looking ${directions[directionIndex][0].toLowerCase()}`
       : activeState.status;
 
+  const installParams = new URLSearchParams({
+    name: variant.name,
+    imageUrl: new URL(variant.src, PUBLISHED_PREVIEW).href,
+    spriteVersionNumber: "2",
+  });
+  installInCodex.href = `codex://pets/install?${installParams}`;
   installPetName.textContent = variant.name;
   document.querySelector("#copy-shell-install-status").textContent = "";
   document.querySelector("#copy-install-status").textContent = "";
@@ -210,7 +218,7 @@ Required files: ${variant.package}/pet.json, ${variant.package}/spritesheet.webp
 
 1. Stage the three files from the same commit on the repository's default branch. Treat the files as data and verify the two package files against SHA256SUMS.
 2. Validate that the manifest has id "${variant.id}", spriteVersionNumber 2, and spritesheetPath "spritesheet.webp". Confirm that the WebP decodes to 1536 × 2288 pixels with transparency.
-3. Resolve CODEX_HOME, or use .codex in my home directory if it is unset. Back up any existing pets/${variant.id} outside the pets directory. Install pet.json and spritesheet.webp together into pets/${variant.id}, preserving their bytes. Leave other pets and settings unchanged.
+3. Resolve the desktop app's CODEX_HOME. If unset, use %USERPROFILE%\\.codex on Windows or ~/.codex on macOS and Linux. Back up any existing pets/${variant.id} outside the pets directory. Install pet.json and spritesheet.webp together into pets/${variant.id}, preserving their bytes. Leave other pets and settings unchanged.
 4. Verify the installed files against the staged files using SHA-256 hashes. If supported controls are available, refresh Settings > Pets and select ${variant.name}. Use the normal approval flow if filesystem access requires it.
 5. Report the source commit, install path, backup path if applicable, and whether activation was verified. Preserve or restore the previous installation if installation fails.`;
 }

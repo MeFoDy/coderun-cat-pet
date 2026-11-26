@@ -88,7 +88,8 @@ input[type="range"] {
 
 button:focus-visible,
 select:focus-visible,
-input:focus-visible {
+input:focus-visible,
+.install-link:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
 }
@@ -182,6 +183,7 @@ h1 {
 
 .variant-control {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
@@ -190,6 +192,29 @@ h1 {
   color: var(--muted);
   background: var(--chrome);
   font-size: 0.85rem;
+}
+
+.variant-picker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.install-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: 9px;
+  color: var(--accent-ink);
+  background: var(--accent);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.install-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .variant-toggle {

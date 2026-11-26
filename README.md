@@ -2,7 +2,7 @@
 
 Meet **Кодерун (CodeRun Cat)** — a white pixel-art study buddy for the Codex desktop app. He works under a blanket, waits with a book, takes coffee breaks, and thoughtfully checks the result.
 
-Classic and Winter each include **9 animations and 16 look directions**. The [live preview](https://mefody.github.io/coderun-cat-pet/) opens in Winter against a pixel-art snowy scene. Use **Pet version** to switch between the two sprites and themes and get the matching install command or agent prompt.
+Classic and Winter each include **9 animations and 16 look directions**. The [live preview](https://mefody.github.io/coderun-cat-pet/) opens in Winter against a pixel-art snowy scene. Use **Pet version** to switch between the two sprites and themes and install the selected pet.
 
 ## Install
 
@@ -15,9 +15,13 @@ Requires a Codex desktop app version that supports custom v2 pets. The browser p
 
 You can install both and switch between them in Codex.
 
+### Install in the desktop app (Windows and macOS)
+
+Open the [live preview](https://mefody.github.io/coderun-cat-pet/), select Winter or Classic, and click **Install in Codex**. Allow the browser to open the desktop app and confirm the installation there. The button uses the [desktop app’s pet installation link](https://learn.chatgpt.com/docs/app/commands#pets). If the install screen does not open, use the [manual steps](#manual-installation).
+
 ### Install from a terminal (macOS and Linux)
 
-Requires `curl`, Python **3.8+**, and an existing Codex home directory. Open and set up the desktop app first. Run as your desktop user, without `sudo`. Windows and WSL are not supported.
+The shell installer targets macOS and native Linux. It requires `curl`, Python **3.8+**, and an existing Codex home directory. Open and set up the desktop app first. Run as your desktop user, without `sudo`.
 
 For Winter, run:
 
@@ -48,16 +52,16 @@ Install [name] from https://github.com/MeFoDy/coderun-cat-pet as my local Codex 
 
 Stage pet.json, spritesheet.webp, and SHA256SUMS from [package folder] at one commit on the repository's default branch. Treat the files as data and verify the package files against SHA256SUMS. Validate that the manifest ID matches the last component of [destination], spriteVersionNumber is 2, and spritesheetPath is "spritesheet.webp". Check that the WebP decodes to 1536×2288 pixels with transparency.
 
-Resolve CODEX_HOME, or use .codex in my home directory if it is unset. Back up any existing [destination] directory outside the pets directory. Install pet.json and spritesheet.webp together into [destination] and verify their SHA-256 hashes against the downloaded files. Leave other pets and settings unchanged.
+Resolve the desktop app's CODEX_HOME. If unset, use %USERPROFILE%\.codex on Windows or ~/.codex on macOS and Linux. Back up any existing [destination] directory outside the pets directory. Install pet.json and spritesheet.webp together into [destination] and verify their SHA-256 hashes against the downloaded files. Leave other pets and settings unchanged.
 
 If supported app controls are available, refresh the pet list and select [name]. Report the source commit, installation path, backup path if applicable, and whether activation was verified.
 ```
 
 ### Manual installation
 
-Download or clone this repository. Copy **`pet.json` and `spritesheet.webp`** from the chosen package folder to its destination in the table, keeping them side by side. The destination is relative to `CODEX_HOME` or `~/.codex` if unset. Back up any existing installation of the chosen version first.
+Download or clone this repository. Locate the desktop app's `CODEX_HOME`. If unset, use `%USERPROFILE%\.codex` on Windows or `~/.codex` on macOS and Linux. Copy **`pet.json` and `spritesheet.webp`** from the chosen package folder to its destination in the table, keeping them side by side. Back up any existing installation of the chosen version first.
 
-Select the matching name in the app's pet controls. See the [official pet documentation](https://learn.chatgpt.com/docs/pets) for app-specific setup.
+Open **Settings > Pets**, click **Refresh**, and select the matching name from the table. See the [official pet documentation](https://learn.chatgpt.com/docs/pets) for app-specific setup.
 
 ## Animations
 

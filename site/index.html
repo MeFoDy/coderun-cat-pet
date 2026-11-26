@@ -10,7 +10,7 @@
     <meta name="theme-color" content="#111327" />
     <title>CodeRun Cat — Codex Pet Preview</title>
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="styles.css?v=24e5456f58df" />
+    <link rel="stylesheet" href="styles.css?v=06b6398eeda3" />
   </head>
   <body>
     <main class="page-shell">
@@ -39,13 +39,16 @@
           </div>
 
           <div class="variant-control">
-            <span>Pet version</span>
-            <button class="variant-toggle" id="pet-variant" type="button"
-              role="switch" aria-label="Winter pet version" aria-checked="true"
-              title="Switch between Classic and Winter">
-              <span class="variant-icon variant-sun" aria-hidden="true"></span>
-              <span class="variant-icon variant-snow" aria-hidden="true"></span>
-            </button>
+            <div class="variant-picker">
+              <span>Pet version</span>
+              <button class="variant-toggle" id="pet-variant" type="button"
+                role="switch" aria-label="Winter pet version" aria-checked="true"
+                title="Switch between Classic and Winter">
+                <span class="variant-icon variant-sun" aria-hidden="true"></span>
+                <span class="variant-icon variant-snow" aria-hidden="true"></span>
+              </button>
+            </div>
+            <a class="install-link" id="install-in-codex">Install in Codex</a>
           </div>
 
           <div class="pet-stage" id="pet-stage">
@@ -155,7 +158,7 @@
         <span id="copy-shell-install-status" role="status" aria-live="polite"></span>
         <pre class="install-command" id="install-command" tabindex="0"></pre>
         <p>The installer downloads the selected package, verifies checksums, and backs up any existing installation of that version. Then open <strong>Settings &gt; Pets</strong>, click <strong>Refresh</strong>, and select <strong id="install-pet-name">CodeRun Cat — Winter</strong>.</p>
-        <p class="install-note">Requires a desktop app supporting custom v2 pets. Windows and WSL are not supported. Uses CODEX_HOME or ~/.codex. <a href="https://github.com/MeFoDy/coderun-cat-pet/blob/main/install.sh">View installer</a> · <a href="https://github.com/MeFoDy/coderun-cat-pet#install">Installation details</a>.</p>
+        <p class="install-note">The shell installer uses <code>CODEX_HOME</code> or <code>~/.codex</code>. On Windows, use <strong>Install in Codex</strong> beside the version switcher or follow the <a href="https://github.com/MeFoDy/coderun-cat-pet#manual-installation">manual installation steps</a>. <a href="https://github.com/MeFoDy/coderun-cat-pet/blob/main/install.sh">View shell installer</a>.</p>
       </section>
 
       <section class="install-card" id="install" aria-labelledby="install-title">
@@ -175,6 +178,6 @@
     </main>
 
     <noscript>This preview needs JavaScript to animate the spritesheet.</noscript>
-    <script src="app.js?v=eb602cc5990e" defer></script>
+    <script src="app.js?v=dcfcf782e356" defer></script>
   </body>
 </html>

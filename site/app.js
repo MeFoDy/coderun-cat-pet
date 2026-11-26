@@ -202,9 +202,11 @@ function selectVariant(key) {
       ? `Looking ${directions[directionIndex][0].toLowerCase()}`
       : activeState.status;
 
+  const installSprite = new URL(variant.src, PUBLISHED_PREVIEW);
+  installSprite.searchParams.delete("v");
   const installParams = new URLSearchParams({
     name: variant.installName ?? variant.name,
-    imageUrl: new URL(variant.src, PUBLISHED_PREVIEW).href,
+    imageUrl: installSprite.href,
     spriteVersionNumber: "2",
   });
   installInCodex.href = `codex://pets/install?${installParams}`;

@@ -49,7 +49,7 @@ if os.environ.get('SIMULATE_ROOT'):
     os.geteuid = lambda: 0
 source = sys.stdin.read()
 if os.environ.get('FAIL_VERIFY'):
-    source = source.replace('            validate(target, hashes)', '            raise OSError("Simulated verification failure")')
+    source = source.replace('            validate(target, hashes, pet_id)', '            raise OSError("Simulated verification failure")')
 exec(compile(source, '<installer>', 'exec'))
 ''')
 
@@ -90,6 +90,29 @@ exec(compile(source, '<installer>', 'exec'))
                              (ROOT / 'pet' / name).read_bytes())
         self.assertIn('already up to date', self.run_installer().stdout)
         self.assertFalse((self.home / 'pet-backups').exists())
+        self.assert_clean()
+
+    def test_variants_install_side_by_side(self):
+        self.run_installer('--variant', 'classic')
+        classic = self.home / 'pets' / 'coderun-cat'
+        winter = self.home / 'pets' / 'coderun-cat-winter'
+        log = self.root / 'requests.txt'
+        self.env['REQUEST_LOG'] = str(log)
+        self.env['FIXTURE'] = str(ROOT / 'pet-winter')
+        result = self.run_installer('--codex-home', str(self.home), '--variant', 'winter')
+        self.assertIn('select CodeRun Cat — Winter', result.stdout)
+        for name in ('pet.json', 'spritesheet.webp'):
+            self.assertEqual((classic / name).read_bytes(), (ROOT / 'pet' / name).read_bytes())
+            self.assertEqual((winter / name).read_bytes(), (ROOT / 'pet-winter' / name).read_bytes())
+        self.assertTrue(all('/pet-winter/' in url for url in log.read_text().splitlines()[1:]))
+        self.assertIn('already up to date', self.run_installer('--variant', 'winter').stdout)
+        self.assertFalse((self.home / 'pet-backups').exists())
+        self.assert_clean()
+
+    def test_winter_rejects_classic_manifest(self):
+        result = self.run_installer('--variant', 'winter', ok=False)
+        self.assertIn('manifest is incompatible', result.stderr)
+        self.assertFalse((self.home / 'pets').exists())
         self.assert_clean()
 
     def test_install_from_stdin_without_saving_script(self):
@@ -165,6 +188,7 @@ exec(compile(source, '<installer>', 'exec'))
         lock.rmdir()
         self.run_installer('--codex-home', ok=False)
         self.run_installer('--unknown', ok=False)
+        self.run_installer('--variant', 'unknown', ok=False)
         self.assertIn('Usage:', self.run_installer('--help').stdout)
 
     def test_unsupported_os(self):

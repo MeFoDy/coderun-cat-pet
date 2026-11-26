@@ -8,7 +8,8 @@ case "$(uname -s)" in
 esac
 
 if [ "${1-}" = '--help' ]; then
-    printf '%s\n' 'Usage: sh install.sh [--codex-home PATH]' \
+    printf '%s\n' 'Usage: sh install.sh [--variant classic|winter] [--codex-home PATH]' \
+        'Default variant: classic. Both variants can be installed side by side.' \
         'Requires curl, Python 3.8+, and an existing Codex home directory.' \
         'Uses CODEX_HOME, or ~/.codex when unset. Installs files without selecting a pet.'
     exit 0
@@ -35,6 +36,10 @@ import tempfile
 
 REPOSITORY = 'MeFoDy/coderun-cat-pet'
 FILES = ('pet.json', 'spritesheet.webp')
+VARIANTS = {
+    'classic': ('pet', 'coderun-cat', 'CodeRun Cat'),
+    'winter': ('pet-winter', 'coderun-cat-winter', 'CodeRun Cat — Winter'),
+}
 
 
 class InstallError(Exception):
@@ -79,25 +84,25 @@ def read_hashes(stage):
     for line in checksums.read_text(encoding='utf-8').splitlines():
         match = re.fullmatch(r'([0-9a-f]{64})  (pet\.json|spritesheet\.webp)', line)
         if not match or match[2] in hashes:
-            raise InstallError('Invalid or duplicate package checksum. The maintainer must update pet/SHA256SUMS in main.')
+            raise InstallError('Invalid or duplicate package checksum. The maintainer must update SHA256SUMS in main.')
         hashes[match[2]] = match[1]
     if set(hashes) != set(FILES):
-        raise InstallError('Missing package checksums. The maintainer must update pet/SHA256SUMS in main.')
+        raise InstallError('Missing package checksums. The maintainer must update SHA256SUMS in main.')
     checksums.unlink()
     return hashes
 
 
-def validate(stage, hashes):
+def validate(stage, hashes, pet_id):
     for name, expected in hashes.items():
         path = stage / name
         if not path.is_file() or digest(path) != expected:
             raise InstallError('Checksum verification failed for ' + name +
                                '. Retry with the official installer. If this persists, ask the maintainer '
-                               'to update pet/SHA256SUMS alongside the assets in main.')
+                               'to update SHA256SUMS alongside the assets in main.')
     manifest = json.loads((stage / 'pet.json').read_text(encoding='utf-8'))
     if not isinstance(manifest, dict) or (
             manifest.get('id'), manifest.get('spriteVersionNumber'), manifest.get('spritesheetPath')) != (
-            'coderun-cat', 2, 'spritesheet.webp'):
+            pet_id, 2, 'spritesheet.webp'):
         raise InstallError('The pet manifest is incompatible. Download a supported CodeRun Cat release.')
     data = (stage / 'spritesheet.webp').read_bytes()
     # The package uses a lossless VP8L WebP. Check its container/header too.
@@ -124,12 +129,14 @@ def install():
         raise InstallError('WSL is not supported. This installer targets native macOS and Linux profiles; '
                            'it cannot install into your Windows desktop app.')
     args = sys.argv[1:]
-    if not args:
-        raw_home = os.environ.get('CODEX_HOME', str(Path.home() / '.codex'))
-    elif len(args) == 2 and args[0] == '--codex-home':
-        raw_home = args[1]
-    else:
+    options = dict(zip(args[::2], args[1::2]))
+    if len(args) != len(options) * 2 or options.keys() - {'--codex-home', '--variant'}:
         raise InstallError('Unknown or incomplete argument. Run sh install.sh --help for usage.')
+    variant = options.get('--variant', 'classic')
+    if variant not in VARIANTS:
+        raise InstallError('Unknown variant. Use --variant classic or --variant winter.')
+    package, pet_id, display_name = VARIANTS[variant]
+    raw_home = options.get('--codex-home', os.environ.get('CODEX_HOME', str(Path.home() / '.codex')))
     if not raw_home or not Path(raw_home).expanduser().is_absolute():
         raise InstallError('Codex home must be a non-empty absolute path. Use --codex-home /absolute/path.')
     home = Path(raw_home).expanduser().resolve()
@@ -140,7 +147,7 @@ def install():
         raise InstallError('Codex home is not writable: ' + str(home) +
                            '. Check ownership and permissions; do not use sudo to bypass this check.')
     pets = home / 'pets'
-    target = pets / 'coderun-cat'
+    target = pets / pet_id
     backups = home / 'pet-backups'
     for directory in (pets, target, backups):
         if directory.is_symlink() or (directory.exists() and not directory.is_dir()):
@@ -166,37 +173,37 @@ def install():
         stage = Path(tempfile.mkdtemp(prefix='.coderun-cat-stage-', dir=str(home)))
         # Resolve main once so a branch update cannot mix package versions.
         commit = resolve_main(stage)
-        base_url = 'https://raw.githubusercontent.com/' + REPOSITORY + '/' + commit + '/pet/'
+        base_url = 'https://raw.githubusercontent.com/' + REPOSITORY + '/' + commit + '/' + package + '/'
         download(base_url + 'SHA256SUMS', stage / 'SHA256SUMS')
         hashes = read_hashes(stage)
         for name in FILES:
             download(base_url + name, stage / name)
-        validate(stage, hashes)
+        validate(stage, hashes, pet_id)
         if target.is_dir() and all((target / name).is_file() and digest(target / name) == expected
                                    for name, expected in hashes.items()):
-            print('CodeRun Cat is already up to date.')
+            print(display_name + ' is already up to date.')
         else:
             pets.mkdir(exist_ok=True)
             if target.exists():
                 backups.mkdir(mode=0o700, exist_ok=True)
-                backup = Path(tempfile.mkdtemp(prefix='coderun-cat-', dir=str(backups))) / 'coderun-cat'
+                backup = Path(tempfile.mkdtemp(prefix=pet_id + '-', dir=str(backups))) / pet_id
                 os.rename(target, backup)
                 moved_old = True
             os.rename(stage, target)
             installed = True
-            validate(target, hashes)
+            validate(target, hashes, pet_id)
             committed = True
         print(r'''
  /\_/\
 ( o.o )
  > ^ <
 ''')
-        print('Success! CodeRun Cat files are installed and verified.')
+        print('Success! ' + display_name + ' files are installed and verified.')
         print('Installation: ' + str(target))
         print('Source: main at commit ' + commit)
         if backup:
             print('Previous installation backup: ' + str(backup))
-        print('Open Settings > Pets, click Refresh, and select CodeRun Cat.')
+        print('Open Settings > Pets, click Refresh, and select ' + display_name + '.')
         print('If it does not appear, update to an app version supporting custom v2 pets and check workspace pet settings.')
         print('App compatibility and activation have not been verified by this installer.')
     finally:

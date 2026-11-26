@@ -1,9 +1,9 @@
 name: Installer checks
 on:
   push:
-    paths: ['install.sh', 'tests/test_installer.py', 'pet/**', '.github/workflows/installer.yml']
+    paths: ['install.sh', 'tests/test_installer.py', 'pet/**', 'pet-winter/**', '.github/workflows/installer.yml']
   pull_request:
-    paths: ['install.sh', 'tests/test_installer.py', 'pet/**', '.github/workflows/installer.yml']
+    paths: ['install.sh', 'tests/test_installer.py', 'pet/**', 'pet-winter/**', '.github/workflows/installer.yml']
 permissions:
   contents: read
 jobs:

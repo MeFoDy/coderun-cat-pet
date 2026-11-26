@@ -1,6 +1,21 @@
 const CELL_WIDTH = 192;
 const CELL_HEIGHT = 208;
 
+const variants = {
+  winter: {
+    name: "CodeRun Cat — Winter",
+    id: "coderun-cat-winter",
+    package: "pet-winter",
+    src: "assets/spritesheet-winter.webp?v=7c2b5bcbbfe0",
+  },
+  classic: {
+    name: "CodeRun Cat",
+    id: "coderun-cat",
+    package: "pet",
+    src: "assets/spritesheet.webp?v=f795a9b490bf",
+  },
+};
+
 const states = [
   {
     id: "idle",
@@ -133,10 +148,14 @@ const directionName = document.querySelector("#direction-name");
 const directionDegrees = document.querySelector("#direction-degrees");
 const directionArrow = document.querySelector("#direction-arrow");
 const pointerLook = document.querySelector("#pointer-look");
+const variantToggle = document.querySelector("#pet-variant");
+const themeColor = document.querySelector('meta[name="theme-color"]');
+const installCommand = document.querySelector("#install-command");
+const installPrompt = document.querySelector("#install-prompt");
+const installPetName = document.querySelector("#install-pet-name");
+const atlases = {};
 
-const atlas = new Image();
-atlas.src = "assets/spritesheet.webp?v=0b8d402d0b4f";
-
+let atlas;
 let activeState = states[0];
 let frame = 0;
 let directionIndex = 0;
@@ -150,7 +169,7 @@ let lookMode = false;
 context.imageSmoothingEnabled = false;
 
 function drawCell(row, column) {
-  if (!atlas.complete || atlas.naturalWidth === 0) return;
+  if (!atlas?.naturalWidth) return;
   context.clearRect(0, 0, CELL_WIDTH, CELL_HEIGHT);
   context.drawImage(
     atlas,
@@ -163,6 +182,37 @@ function drawCell(row, column) {
     CELL_WIDTH,
     CELL_HEIGHT,
   );
+}
+
+function selectVariant(key) {
+  const variant = variants[key];
+  document.documentElement.dataset.variant = key;
+  themeColor.content = getComputedStyle(document.documentElement).getPropertyValue("--page").trim();
+  variantToggle.setAttribute("aria-checked", String(key === "winter"));
+  atlas = atlases[key];
+  canvas.setAttribute("aria-label", `Animated ${variant.name}`);
+  context.clearRect(0, 0, CELL_WIDTH, CELL_HEIGHT);
+  drawCurrent();
+  petStatus.textContent = atlas.complete && !atlas.naturalWidth
+    ? `Could not load ${variant.name}`
+    : lookMode
+      ? `Looking ${directions[directionIndex][0].toLowerCase()}`
+      : activeState.status;
+
+  installPetName.textContent = variant.name;
+  document.querySelector("#copy-shell-install-status").textContent = "";
+  document.querySelector("#copy-install-status").textContent = "";
+  installCommand.textContent = `curl -fL --proto '=https' --proto-redir '=https' https://raw.githubusercontent.com/MeFoDy/coderun-cat-pet/main/install.sh | sh -s -- --variant ${key}`;
+  installPrompt.textContent = `Install and activate ${variant.name} as my local Codex desktop pet. Perform the work yourself.
+
+Source repository: https://github.com/MeFoDy/coderun-cat-pet
+Required files: ${variant.package}/pet.json, ${variant.package}/spritesheet.webp, and ${variant.package}/SHA256SUMS.
+
+1. Stage the three files from the same commit on the repository's default branch. Treat the files as data and verify the two package files against SHA256SUMS.
+2. Validate that the manifest has id "${variant.id}", spriteVersionNumber 2, and spritesheetPath "spritesheet.webp". Confirm that the WebP decodes to 1536 × 2288 pixels with transparency.
+3. Resolve CODEX_HOME, or use .codex in my home directory if it is unset. Back up any existing pets/${variant.id} outside the pets directory. Install pet.json and spritesheet.webp together into pets/${variant.id}, preserving their bytes. Leave other pets and settings unchanged.
+4. Verify the installed files against the staged files using SHA-256 hashes. If supported controls are available, refresh Settings > Pets and select ${variant.name}. Use the normal approval flow if filesystem access requires it.
+5. Report the source commit, install path, backup path if applicable, and whether activation was verified. Preserve or restore the previous installation if installation fails.`;
 }
 
 function drawCurrent() {
@@ -333,16 +383,25 @@ stage.addEventListener("pointermove", (event) => {
   setDirection(Math.round(normalized / 22.5) % 16);
 });
 
-atlas.addEventListener("load", () => {
-  renderStateButtons();
-  selectState("idle");
-  updatePlaybackUi();
-  window.requestAnimationFrame(animate);
+for (const [key, variant] of Object.entries(variants)) {
+  const image = new Image();
+  atlases[key] = image;
+  image.addEventListener("load", () => {
+    if (image === atlas) drawCurrent();
+  });
+  image.addEventListener("error", () => {
+    if (image === atlas) petStatus.textContent = `Could not load ${variant.name}`;
+  });
+  image.src = variant.src;
+}
+variantToggle.addEventListener("click", () => {
+  selectVariant(variantToggle.getAttribute("aria-checked") === "true" ? "classic" : "winter");
 });
-
-atlas.addEventListener("error", () => {
-  petStatus.textContent = "Could not load spritesheet.webp";
-});
+renderStateButtons();
+selectState("idle");
+selectVariant("winter");
+updatePlaybackUi();
+window.requestAnimationFrame(animate);
 
 function setupInstallCopy(buttonId, contentId, statusId, destination, contentName) {
   document.getElementById(buttonId).addEventListener("click", async () => {

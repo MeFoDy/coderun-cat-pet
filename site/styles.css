@@ -204,17 +204,7 @@ h1 {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  padding: 0 12px;
-  border-radius: 9px;
-  color: var(--accent-ink);
-  background: var(--accent);
-  font-weight: 700;
   text-decoration: none;
-}
-
-.install-link:hover {
-  text-decoration: underline;
-  text-underline-offset: 3px;
 }
 
 .variant-toggle {
@@ -394,6 +384,7 @@ h1 {
 
 .icon-button:hover,
 .demo-button:hover,
+.install-link:hover,
 .state-button:hover {
   border-color: var(--accent);
 }
@@ -438,7 +429,8 @@ select {
   font-size: 1.75rem;
 }
 
-.demo-button {
+.demo-button,
+.install-link {
   flex: none;
   padding: 10px 13px;
   border: 1px solid var(--control-line);

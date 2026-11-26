@@ -5,6 +5,7 @@ const PUBLISHED_PREVIEW = "https://mefody.github.io/coderun-cat-pet/";
 const variants = {
   winter: {
     name: "CodeRun Cat — Winter",
+    installName: "CodeRun Cat Winter",
     id: "coderun-cat-winter",
     package: "pet-winter",
     src: "assets/spritesheet-winter.webp?v=7c2b5bcbbfe0",
@@ -202,7 +203,7 @@ function selectVariant(key) {
       : activeState.status;
 
   const installParams = new URLSearchParams({
-    name: variant.name,
+    name: variant.installName ?? variant.name,
     imageUrl: new URL(variant.src, PUBLISHED_PREVIEW).href,
     spriteVersionNumber: "2",
   });
